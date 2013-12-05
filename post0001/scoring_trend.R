@@ -18,7 +18,8 @@ dev.off()
 cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#CC79A7")
 cbPalette <- c(cbPalette, cbPalette)
 
-g2 <- ggplot(totals, aes(x=Week, y=Points, group=Team, colour=Team, linetype=Team )) + geom_point() + scale_colour_manual(values=cbPalette) + geom_smooth(method="lm",fullrange=TRUE,se=FALSE,size=1) + scale_linetype_manual(values=c(rep("solid",6),rep("dashed",6)) )  + scale_x_continuous(limits = c(1, 16)) + ggtitle( "Route 18's Finest - 2013 Scoring trend (by team)" )
+
+g2 <- ggplot(totals, aes(x=Week, y=Points, group=Team, colour=Team, linetype=Team, shape=Team )) + geom_point() + scale_shape_manual(values=c(rep(1,6),rep(2,6)) ) + scale_colour_manual(values=cbPalette) + geom_smooth(method="lm",fullrange=TRUE,se=FALSE,size=1) + scale_linetype_manual(values=c(rep("solid",6),rep("dashed",6)) )  + scale_x_continuous(limits = c(1, 16)) + ggtitle( "Route 18's Finest - 2013 Scoring trend (by team)" )
 png(filename="scoring_trend_team.png", width=600, height=300)
 print(g2)
 dev.off()
