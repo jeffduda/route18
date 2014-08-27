@@ -1,0 +1,10 @@
+Base address
+http://football.fantasysports.yahoo.com/f1/15294
+
+QBs, projected, week1, 1-25
+http://football.fantasysports.yahoo.com/f1/15294/players?&sort=PR&sdir=1&status=ALL&pos=QB&stat1=S_PW_1&count=1
+
+count=X - ranking of first player listed, 25 listed on page
+stat1=S_PW_1 - S = sort?, PW = projected weekly (_W = weekly actual stat), _1 = week #
+sort=PR = sort players by projected ranking
+pos=QB = player position {QB,RB,WR,TE,DEF,K,W%2FR%2FT}
