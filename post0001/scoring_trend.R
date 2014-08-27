@@ -1,7 +1,9 @@
 require(ggplot2)
 require(colorspace)
 
-w <- read.csv("../data/2013_weekly.csv")
+#w <- read.csv("../data/2013_weekly.csv")
+wfull <- read.csv("../data/2013_weekly.csv")
+w <- wfull[ which(wfull$week < 14), ] 
 
 ranks <- c("john","frank","brian","nate","owen","pete","anthony","dave","ryan","steve","fred","jeff")
 w$team <- factor(w$team, levels=ranks)
@@ -51,9 +53,27 @@ for( team in ranks ) {
   preds <- predict(lx,ftr, se.fit=TRUE)
 
   print( paste( team, "14", preds$fit[1], "+/-", preds$se.fit[1] ) )
-  #print( paste( team, "15", preds$fit[2], "+/-", preds$se.fit[2] ) )
-  #print( paste( team, "16", preds$fit[3], "+/-", preds$se.fit[3] ) )
+}
 
+totals2 <- data.frame(Points=wfull$QB+wfull$RB1+wfull$RB2+wfull$WR1+wfull$WR2+wfull$TE+wfull$D+wfull$K+wfull$FLEX, Week=wfull$week, Team=wfull$team, Result=wfull$result)
+
+playoffs1 <- c("john","frank","brian","nate") 
+
+for( team in playoffs1 ) {
+  tx <- which(totals2$Team==team)
+  pts <- totals2$Points[tx]
+  week <- totals2$Week[tx]
+  
+  lx <- lm(pts ~ 1 + week)
+  x <- summary(lx)
+  pval <- pf(x$fstatistic[1], x$fstatistic[2], x$fstatistic[3], lower.tail=FALSE)
+  #print( paste(team, pval) )
+
+  ftr <- data.frame(week=c(14,15,16))
+  preds <- predict(lx,ftr, se.fit=TRUE)
+
+  print( paste( team, "15", preds$fit[2], "+/-", preds$se.fit[2] ) )
+                 
 }
 
 
