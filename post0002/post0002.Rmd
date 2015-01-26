@@ -1,0 +1,62 @@
+---
+title: "Route18 Draft Pick Value"
+output: pdf_document
+---
+
+# Objective
+
+```{r Draft-Pick-Value, fig.width=8, fig.height=8, echo=TRUE}
+library(ggplot2)
+
+dat = read.csv("../data/Draft_2014.csv")
+dat$Keeper = as.factor(dat$Keeper)
+
+valid = which( dat$Position=="RB")
+valid = c(valid, which(dat$Position=="WR"))
+valid = c(valid, which(dat$Position=="QB"))
+valid = c(valid, which(dat$Position=="TE"))
+
+dat = dat[valid,]
+
+valid = which(dat$PreRank < 500)
+dat = dat[valid,]
+
+round = floor((dat$Pick-1) / 12 / 4)+1
+
+dat = data.frame(dat, Round=as.factor(round))
+
+limx=c(1,max(dat$Rank))
+limy=c(1,max(dat$PreRank))
+p = ggplot(dat, aes(x=Pick, y=PreRank, colour=Position, shape=Keeper, group=Keeper)) +
+  geom_point() + geom_smooth(method="lm", fullrange=T, formula=y ~ poly(x, 1)) + coord_fixed() +
+  scale_x_continuous( breaks=12*c(0:15) ) +
+  scale_y_continuous( breaks=12*c(0:15) ) +
+  geom_abline(size=1,linetype=2,alpha=0.2)
+print(p)
+png(filename="all_picks.png", width=500, height=600)
+print(p)
+dev.off()
+
+drafted = dat[dat$Keeper=="0",]
+
+p = ggplot(drafted, aes(x=Pick, y=PreRank, colour=Position, group=Round)) +
+  geom_point() + geom_smooth(method="lm", fullrange=F, formula=y ~ poly(x, 1)) + coord_fixed() +
+  scale_x_continuous( breaks=12*c(0:15) ) +  
+  scale_y_continuous( breaks=12*c(0:15) ) +
+  geom_abline(size=1,linetype=2,alpha=0.2)
+print(p)
+png(filename="piecewise_picks.png", width=500, height=600)
+print(p)
+dev.off()
+
+p = ggplot(drafted, aes(x=Pick, y=PreRank, colour=Position, group=Position)) +
+  geom_point() + geom_smooth(method="lm", fullrange=F, formula=y ~ poly(x, 2)) + coord_fixed() +
+  scale_x_continuous( breaks=12*c(0:15) ) +  
+  scale_y_continuous( breaks=12*c(0:15) ) +
+  geom_abline(size=1,linetype=2,alpha=0.2)
+print(p)
+png(filename="poly2_picks.png", width=500, height=600)
+print(p)
+dev.off()
+
+```
